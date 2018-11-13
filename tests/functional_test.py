@@ -1,7 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import pytest
 import app
-from flask import request
 
 
 @pytest.fixture
@@ -14,9 +13,6 @@ def test_hello_world(my_app):
     # res = my_app.get("/")
     # assert res.status_code == 200
     assert my_app
-
-
-# TODO: FIX CONTEXT ERROR IN ALL PATCH REQUEST TESTS
 
 
 # Fetch all parcel delivery orders
