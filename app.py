@@ -74,7 +74,7 @@ class CancelOrder(Resource):
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
-            parcel.update(data)
+            parcel.update(CancelOrder.parser.parse_args())
             return parcel, 200
         else:
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
@@ -84,7 +84,7 @@ class CancelOrder(Resource):
 class ChangeStatus(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('status',
-                        type=bool,
+                        type=str,
                         required=True,
                         help="This field cannot be left blank!"
                         )
@@ -98,7 +98,7 @@ class ChangeStatus(Resource):
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
-            parcel.update(data)
+            parcel.update(ChangeStatus.parser.parse_args())
             return parcel, 200
         else:
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
@@ -122,7 +122,7 @@ class ChangeLocation(Resource):
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
-            parcel.update(data)
+            parcel.update(ChangeLocation.parser.parse_args())
             return parcel, 200
         else:
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
@@ -146,7 +146,7 @@ class ChangeDestination(Resource):
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
-            parcel.update(data)
+            parcel.update(ChangeDestination.parser.parse_args())
             return parcel, 200
         else:
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
