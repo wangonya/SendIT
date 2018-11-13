@@ -71,8 +71,6 @@ class CancelOrder(Resource):
                         )
 
     def patch(self, order_id):
-        data = CancelOrder.parser.parse_args()
-
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
@@ -97,8 +95,6 @@ class ChangeStatus(Resource):
                         )
 
     def patch(self, order_id):
-        data = ChangeStatus.parser.parse_args()
-
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
@@ -123,8 +119,6 @@ class ChangeLocation(Resource):
                         )
 
     def patch(self, order_id):
-        data = ChangeLocation.parser.parse_args()
-
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
@@ -134,7 +128,7 @@ class ChangeLocation(Resource):
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
 
 
-# Fetch all parcel delivery order by a specific user
+# Change destination -- only admin
 class ChangeDestination(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('to',
@@ -149,7 +143,6 @@ class ChangeDestination(Resource):
                         )
 
     def patch(self, order_id):
-        data = ChangeDestination.parser.parse_args()
         parcel = next(filter(lambda x: x['id'] == order_id, parcels), None)
 
         if parcel is not None:
@@ -159,7 +152,7 @@ class ChangeDestination(Resource):
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
 
 
-#
+# Flask Restful Routes
 api.add_resource(ParcelsList, '/parcels')
 api.add_resource(Parcel, '/parcels/<string:order_id>')
 api.add_resource(CancelOrder, '/parcels/<string:order_id>/cancel')
