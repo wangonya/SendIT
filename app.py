@@ -4,6 +4,7 @@ from flask_jwt import JWT, jwt_required, current_identity
 
 from auth import authenticate, identity, userid_mapping, users
 from parcels import ParcelsList, Parcel, CancelOrder, ChangeStatus, ChangeLocation, ChangeDestination
+from user import UserRegistration, UserLogin
 app = Flask(__name__)
 api = Api(app)
 app.secret_key = 'kinyanjui-wangonya'
@@ -24,6 +25,10 @@ api.add_resource(CancelOrder, '/parcels/<int:order_id>/cancel')
 api.add_resource(ChangeDestination, '/parcels/<int:order_id>/destination')
 api.add_resource(ChangeStatus, '/parcels/<int:order_id>/status')
 api.add_resource(ChangeLocation, '/parcels/<int:order_id>/currentlocation')
+
+# auth
+api.add_resource(UserRegistration, '/auth/signup')
+api.add_resource(UserLogin, '/auth/login')
 
 
 if __name__ == '__main__':
