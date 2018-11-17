@@ -8,6 +8,8 @@ import json
 import psycopg2
 from passlib.hash import pbkdf2_sha256 as sha256
 
+# TODO: ADD FEATURE -- LOGOUT
+
 
 class User(Resource):
     def __init__(self, _id, username, password):
