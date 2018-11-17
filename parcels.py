@@ -230,3 +230,19 @@ class ChangeDestination(Resource):
                    }, 200
         else:
             return {'message': "Parcel with id '{}' does not exist.".format(order_id)}, 404
+
+
+# get orders by specific user
+class GetUserOrder(Resource):
+    @jwt_required
+    def get(self, _id):
+        get_query = """SELECT *
+                               FROM parcels
+                               WHERE placedby = %s"""
+        cursor.execute(get_query, (_id,))
+        user_parcels = cursor.fetchall()
+
+        return {
+                    'status': 200,
+                    'data': json.dumps(user_parcels, default=str, separators=(',', ': '))
+            }, 200

@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from parcels import ParcelsList, Parcel, CancelOrder, ChangeStatus, ChangeLocation, ChangeDestination
+from parcels import ParcelsList, Parcel, CancelOrder, ChangeStatus, ChangeLocation, ChangeDestination, GetUserOrder
 from user import UserRegistration, UserLogin
 app = Flask(__name__)
 api = Api(app)
@@ -24,6 +24,7 @@ api.add_resource(CancelOrder, '/parcels/<int:order_id>/cancel')
 api.add_resource(ChangeDestination, '/parcels/<int:order_id>/destination')
 api.add_resource(ChangeStatus, '/parcels/<int:order_id>/status')
 api.add_resource(ChangeLocation, '/parcels/<int:order_id>/currentlocation')
+api.add_resource(GetUserOrder, '/users/<int:_id>/parcels')
 
 # auth
 api.add_resource(UserRegistration, '/auth/signup')
