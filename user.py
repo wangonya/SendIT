@@ -2,6 +2,8 @@ from flask_restful import Resource, reqparse
 from db import connection, cursor
 from tables import create_users_table
 
+from flask_jwt_extended import (create_access_token, jwt_refresh_token_required, get_jwt_identity)
+
 import json
 import psycopg2
 from passlib.hash import pbkdf2_sha256 as sha256
@@ -93,13 +95,15 @@ class UserRegistration(Resource):
         try:
             cursor.execute(insert_query, record_to_insert)
             connection.commit()
+            access_token = create_access_token(identity=data['username'])
             return {
                        'status': 201,
                        'data': [{
-                           'token': 'tokenhere',
+                           'token': access_token,
                            'user': data['username']
                        }]
                    }, 201
+        # TODO: HANDLE ERROR BETTER -- 409 IF CONFLICT, 500 IF OTHER
         except (Exception, psycopg2.Error) as error:
             connection.rollback()
             return {
@@ -132,12 +136,22 @@ class UserLogin(Resource):
             pwd_verify_hash = User.verify_hash(data['pwd'], user.password)
 
             if pwd_verify_hash:
+                access_token = create_access_token(identity=data['username'])
                 return {
                            'status': 200,
                            'data': [{
-                               'token': 'tokenhere',
+                               'token': access_token,
                                'user': data['username']
                            }]
                        }, 200
             else:
                 return {'message': "Wrong password"}, 401
+
+
+# refresh token when it expires
+class TokenRefresh(Resource):
+    @jwt_refresh_token_required
+    def post(self):
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
+        return {'access_token': access_token}

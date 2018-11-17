@@ -1,11 +1,13 @@
 from flask_restful import Resource, reqparse
-from flask_jwt import jwt_required
-import psycopg2
+from flask_jwt_extended import jwt_required
+
 import json
 
 from db import connection, cursor
 from tables import create_parcels_table
 
+
+# TODO: ADD DELETE ROUTE -- ONLY ADMIN
 
 class ParcelsList(Resource):
     parser = reqparse.RequestParser()
@@ -56,7 +58,7 @@ class ParcelsList(Resource):
                         )
 
     # Fetch all parcel delivery orders
-    # @jwt_required()
+    @jwt_required
     def get(self):
         get_parcels_query = "SELECT * FROM parcels"
         cursor.execute(get_parcels_query)
@@ -68,7 +70,7 @@ class ParcelsList(Resource):
                }, 200
 
     # Post an order
-    # @jwt_required()
+    @jwt_required
     def post(self):
         data = ParcelsList.parser.parse_args()
 
@@ -94,7 +96,7 @@ class ParcelsList(Resource):
 
 # Fetch a specific parcel delivery order
 class Parcel(Resource):
-    # @jwt_required()
+    @jwt_required
     def get(self, order_id):
         get_query = """SELECT *
                                 FROM parcels
@@ -113,7 +115,7 @@ class Parcel(Resource):
 
 # Cancel specific order
 class CancelOrder(Resource):
-    # @jwt_required()
+    @jwt_required
     def patch(self, order_id):
         update_query = """UPDATE parcels
                             SET status = %s
@@ -143,7 +145,7 @@ class ChangeStatus(Resource):
                         help="This field cannot be left blank!"
                         )
 
-    # @jwt_required()
+    @jwt_required
     def patch(self, order_id):
         data = ChangeStatus.parser.parse_args()
 
@@ -175,7 +177,7 @@ class ChangeLocation(Resource):
                         help="This field cannot be left blank!"
                         )
 
-    # @jwt_required()
+    @jwt_required
     def patch(self, order_id):
         data = ChangeLocation.parser.parse_args()
 
@@ -207,7 +209,7 @@ class ChangeDestination(Resource):
                         help="This field cannot be left blank!"
                         )
 
-    # @jwt_required()
+    @jwt_required
     def patch(self, order_id):
         data = ChangeDestination.parser.parse_args()
 
