@@ -1,8 +1,8 @@
-from flask import Flask, request
-from flask_restful import Resource, Api, reqparse
-from flask_jwt import JWT, jwt_required, current_identity
+from flask import Flask
+from flask_restful import Api
+from flask_jwt import JWT
 
-from auth import authenticate, identity, userid_mapping, users
+from auth import authenticate, identity
 from parcels import ParcelsList, Parcel, CancelOrder, ChangeStatus, ChangeLocation, ChangeDestination
 from user import UserRegistration, UserLogin
 app = Flask(__name__)
