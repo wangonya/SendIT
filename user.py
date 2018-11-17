@@ -4,6 +4,7 @@ from tables import create_users_table
 
 import json
 import psycopg2
+from passlib.hash import pbkdf2_sha256 as sha256
 
 
 class User(Resource):
@@ -11,6 +12,33 @@ class User(Resource):
         self.id = _id
         self.username = username
         self.password = password
+
+    @classmethod
+    def find_by_username(cls, username):
+        try:
+            select_query = """SELECT id, username, pwd
+                                            FROM users
+                                            WHERE username = %s"""
+
+            cursor.execute(select_query, username)
+            row = cursor.fetchone()
+
+            if row:
+                return cls(row['id'], row['username'], row['pwd'])
+        except (Exception, psycopg2.Error) as error:
+            connection.rollback()
+            return {
+                        'status': 500,
+                        'message': json.dumps(error, default=str)
+                    }, 500
+
+    @staticmethod
+    def generate_hash(password):
+        return sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
 
 
 # signup
@@ -55,6 +83,7 @@ class UserRegistration(Resource):
 
     def post(self):
         data = UserRegistration.parser.parse_args()
+        data['pwd'] = User.generate_hash(data['pwd'])
         create_users_table()
         insert_query = """INSERT INTO users (username, pwd, firstname, 
                                     lastname, othernames, email, registered, isAdmin) 
@@ -74,9 +103,9 @@ class UserRegistration(Resource):
         except (Exception, psycopg2.Error) as error:
             connection.rollback()
             return {
-                       'status': 400,
+                       'status': 500,
                        'message': json.dumps(error, default=str)
-                   }, 400
+                   }, 500
 
 
 # login
@@ -95,22 +124,20 @@ class UserLogin(Resource):
 
     def post(self):
         data = UserLogin.parser.parse_args()
+        user = User.find_by_username(username=[data['username']])
 
-        select_query = """SELECT username, pwd
-                                FROM users
-                                WHERE username = %s AND pwd = %s"""
-        values = list(data.values())
-
-        cursor.execute(select_query, values)
-        row = cursor.fetchone()
-
-        if row is not None:
-            return {
-                       'status': 200,
-                       'data': [{
-                           'token': 'tokenhere',
-                           'user': data['username']
-                       }]
-                   }, 200
+        if user is None:
+            return {'message': "User '{}' does not exist".format(data['username'])}, 401
         else:
-            return {'message': "Wrong password / User '{}' does not exist".format(data['username'])}, 404
+            pwd_verify_hash = User.verify_hash(data['pwd'], user.password)
+
+            if pwd_verify_hash:
+                return {
+                           'status': 200,
+                           'data': [{
+                               'token': 'tokenhere',
+                               'user': data['username']
+                           }]
+                       }, 200
+            else:
+                return {'message': "Wrong password"}, 401

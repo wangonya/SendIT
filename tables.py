@@ -31,7 +31,7 @@ def create_users_table():
                 username VARCHAR(10) NOT NULL UNIQUE ,
                 registered TIMESTAMP NOT NULL,
                 isAdmin BOOLEAN,
-                pwd VARCHAR(20) NOT NULL 
+                pwd VARCHAR(100) NOT NULL 
               ); '''
 
     cursor.execute(create_table_query)
