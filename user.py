@@ -18,7 +18,7 @@ class User(Resource):
         self.password = password
 
     @classmethod
-    def find_by_username(cls, username):
+    def find_user(cls, username):
         try:
             select_query = """SELECT id, username, pwd
                                             FROM users
@@ -130,7 +130,7 @@ class UserLogin(Resource):
 
     def post(self):
         data = UserLogin.parser.parse_args()
-        user = User.find_by_username(username=[data['username']])
+        user = User.find_user(username=[data['username']])
 
         if user is None:
             return {'message': "User '{}' does not exist".format(data['username'])}, 401
