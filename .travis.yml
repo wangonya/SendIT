@@ -13,7 +13,7 @@ branches:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database sendit;' -U wangonya
+  - psql -c 'create database sendit;' -U postgres
 
 script:
   - pytest
