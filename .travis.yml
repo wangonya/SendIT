@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.7"
+script:
+  - pytest
+
+# for heroku deployment:
+# https://docs.travis-ci.com/user/deployment/heroku/
