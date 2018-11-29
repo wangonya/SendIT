@@ -3,6 +3,12 @@ python:
   - "3.7"
 install:
   - pip install -r requirements.txt
+# safelist
+branches:
+  only:
+  - develop
+#  - master
+
 #script:
 #  - pytest
 
