@@ -17,5 +17,3 @@ and the ​destination​​.
 1. The application should display a Google Map with a line connecting both Markers (​pickup location ​​and the ​destination​​).
 2. The application should display a Google Map with computed travel distance and journey duration between the ​pickup location​​ and the ​destination​​.
 3. The user gets real-time email notification when Admin changes the ​status ​​of their parcel or when Admin changes the ​present location​​ of their parcel.
-
-#### [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2223847)
