@@ -1,0 +1,22 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -r requirements.txt
+# safelist
+branches:
+  only:
+  - develop
+#  - master
+
+# db
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database sendit;' -U postgres
+
+script:
+  - pytest
+
+# for heroku deployment:
+# https://docs.travis-ci.com/user/deployment/heroku/

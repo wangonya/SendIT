@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 try:
-    connection = psycopg2.connect(user="wangonya",
+    connection = psycopg2.connect(user="postgres",
                                   password="",
                                   host="127.0.0.1",
                                   port="5432",
